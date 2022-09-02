@@ -1,0 +1,231 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+
+
+
+<div class="container">    
+<p align="center">{{ titulo_pagina }}</p>
+   <form enctype="multipart/form-data" action="." method="post">{%csrf_token%}
+
+   {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<p>
+<span style="color:red">Instruções</span>
+<a href="" onClick="javascript:window.open('/static/imagens/instrucoes_amarracao.html', 'popup') ;return false">Click aqui</a>
+</p>
+
+
+<div class="row">   
+<div class="form-group">
+    
+    <div class="col">
+    <label for="id_grupo" class="col-form-label">Operação</label>
+    <select name="operacao"  id="id_operacao" class="form-control" >
+      {% for id, name in form.operacao.field.widget.choices %}
+      <option value="{{ id }}"  >{{ name }}</option>
+      {% endfor %}
+    </select>   
+    </div>
+    
+</div>    
+</div>  
+
+  
+
+
+<div class="row">
+<div class="form-group">  
+  <div class="col">
+  
+    <div class="fileUpload btn btn-outline-secondary ">
+    <label for="upload" class="col-form-label">Planilha das pastas</label>
+      <input type="file" class="upload" name="plan_pastas" id="planilha" required />
+    </div>
+  </div>
+  </div>
+</div>  
+
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <label for="tramit_01" class="col-form-label">01. Tramitacões</label>
+    <select name="tramit_01"  id="tramit_01" class="form-control" onchange="fnTramit_01();">
+      {% for id, name in tramitacao_01 %}
+      <option value="{{ id }}"  >{{ name }}</option>
+      {% endfor %}
+    </select>   
+    </div>  
+
+
+  <div class="form-group col-md-6">
+    <label for="tramit_02" class="col-form-label">Tramitacões dentro das pastas </label>
+    <select name="tramit_02"  id="tramit_02" size="3" class="form-control" onchange="fnTramit_02();">
+    </select>   
+    </div>  
+</div>    
+
+
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <label for="tramit_11" class="col-form-label">02. Tramitacões</label>
+    <select name="tramit_11"  id="tramit_11" class="form-control" onchange="fnTramit_11();">
+      {% for id, name in tramitacao_01 %}
+      <option value="{{ id }}"  >{{ name }}</option>
+      {% endfor %}
+    </select>   
+    </div>  
+
+
+  <div class="form-group col-md-6">
+    <label for="tramit_12" class="col-form-label">Tramitacões fora das pastas</label>
+    <select name="tramit_12"  id="tramit_12" size="3" class="form-control" onchange="fnTramit_12();">
+    </select>   
+    </div>  
+</div>   
+
+<div class="form-row">
+<input type="hidden" name="tramit_yes" id="tramit_yes" value="">
+<input type="hidden" name="tramit_not" id="tramit_not" value="">
+</div>
+
+
+    <p><span style="display:none"><input type="submit" id="submit" value="Entrar 2" ></span></p>
+    <p>
+    <a class="btn btn-primary" href="#" id="bt_submit" onclick="fnSubmit();"  role="button">Executar</a>
+    </p>
+    <div id="msgDiv" style="display:none">Aguarde ja estamos processando!!</div>
+
+
+
+<script>
+function fnSubmit(){
+  var count_tramit_02 = document.getElementById("tramit_02");
+  if(count_tramit_02.length==0) {
+      alert("Informa ao menos uma tramitacao para estar dentra das pastas!");
+      return false;
+  }
+  if(document.getElementById("planilha").value=="") {
+      alert("Informe planilha com o codigo das pastas!");
+      return false;
+  }
+
+  fnTramitacoes_yes();
+  fnTramitacoes_not();
+
+
+  document.getElementById("bt_submit").disabled=true;
+
+  document.getElementById("bt_submit").disabled=true;
+  document.getElementById("msgDiv").style.display = "block";
+  document.getElementById("submit").click();
+
+}
+
+function fnTramit_01(){
+
+  var count_tramit_02 = document.getElementById("tramit_02");
+  if(count_tramit_02.length==3) {
+    alert("Não pode informar mais do que tres tramitacoes para estar dentra das pastas!");
+    return false;
+  }
+    var sel = document.getElementById('tramit_01');
+    var opt = sel.options[sel.selectedIndex];
+    var sel2 = document.getElementById('tramit_02');
+    var opt2 = document.createElement('option');
+    opt2.appendChild( document.createTextNode(opt.text));
+    opt2.value = opt.value; 
+    sel2.appendChild(opt2); 
+    return false;
+}
+
+function fnTramit_11(){
+    var sel = document.getElementById('tramit_11');
+    var opt = sel.options[sel.selectedIndex];
+    var sel2 = document.getElementById('tramit_12');
+    var opt2 = document.createElement('option');
+    opt2.appendChild( document.createTextNode(opt.text));
+    opt2.value = opt.value; 
+    sel2.appendChild(opt2); 
+    return false;
+}
+
+function fnTramit_02(){
+    var sel = document.getElementById('tramit_02');
+    var opt = sel.options[sel.selectedIndex];
+
+    sel.removeChild(opt);
+    return false;
+}
+
+
+function fnTramit_12(){
+    var sel = document.getElementById('tramit_12');
+    var opt = sel.options[sel.selectedIndex];
+
+    sel.removeChild(opt);
+    return false;
+}
+
+
+function fnTramitacoes_yes(){
+  let tramitacoes="";
+  var sel = document.getElementById('tramit_02');  
+  var opt;
+  for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+    opt = sel.options[i];
+    if (i>=0){
+      if (tramitacoes==""){
+        tramitacoes = opt.value;
+      } else {
+        tramitacoes += ","+opt.value;
+      }
+    }
+    
+  }
+  document.getElementById("tramit_yes").value=tramitacoes;
+}
+
+function fnTramitacoes_not(){
+  let tramitacoes="";
+  var sel = document.getElementById('tramit_12');  
+  var opt;
+  for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+    opt = sel.options[i];
+    if (i>=0){
+      if (tramitacoes==""){
+        tramitacoes = opt.value;
+      } else {
+        tramitacoes += ","+opt.value;
+      }
+    }
+    
+  }
+  document.getElementById("tramit_not").value=tramitacoes;
+}
+
+
+</script>
+<style>
+#msgDiv {
+  width: 550px;
+  height: 150px;
+  background-color: lightblue;
+  font-size: 24px;
+}
+
+</style>
+
+
+
+   </form>
+   <hr>
+</div>
+</div>
+</div>
+{% endblock %}

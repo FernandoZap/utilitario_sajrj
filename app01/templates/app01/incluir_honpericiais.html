@@ -1,0 +1,49 @@
+{% extends 'base2.html' %}
+
+
+{% block content %}
+<br/>
+<p align="center">Incluir honorarios periciais</p>
+ <div class="splash">
+   <div class="pure-g-r">
+     <div class="pure-u-1">
+    
+   <form enctype="multipart/form-data" action="{% url 'app01:incluirHp' %}" method="post">{%csrf_token%}
+
+   {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+   
+    {{ form.as_p }}
+    <p><span style="display:none"><input type="submit" id="submit" value="Entrar 2" ></span></p>
+    <p><input type="button" value="Executar" id="bt_submit" onclick="fnSubmit();" ></p>
+    <div id="msgDiv" style="display:none">Aguarde ja estamos processando!!</div>
+<script>
+function fnSubmit(){
+  document.getElementById("bt_submit").disabled=true;
+  document.getElementById("msgDiv").style.display = "block";
+  document.getElementById("submit").click();
+
+}
+</script>
+<style>
+#msgDiv {
+  width: 550px;
+  height: 150px;
+  background-color: lightblue;
+  font-size: 24px;
+}
+
+</style>
+
+   </form>
+   <hr>
+</div>
+</div>
+</div>
+{% endblock %}

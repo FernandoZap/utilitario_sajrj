@@ -1,0 +1,55 @@
+{% extends 'base2.html' %}
+
+
+
+{% block content %}
+<br/>
+
+
+<div class="container">    
+<p align="center">{{ titulo_pagina }}</p>
+   <form enctype="multipart/form-data" action="." method="post">{%csrf_token%}
+
+   {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<div class="row">   
+
+<div class="form-group">
+      
+    
+    <div class="col">
+	usuario: {{ username  }} <br> funcao {{ funcao }}
+	<table border="1">	
+	<tr><td>Nome</td><td>Tipo</td><td>Data</td></tr>
+		
+      {% for usuario in object_list %}
+	  <tr>
+	  <td>{{ usuario.username }}</td>
+	  <td>{{ usuario.funcao }}</td>
+	  <td>{{ usuario.iduser }}</td>
+	  </tr>
+      {% endfor %}
+	  </table>
+    </div>
+	<p>
+	<a href="#">lista 2</a><br>
+	<a href="#">listu 1</a><br>
+	<a href="#">listu 2</a><br>
+	
+	
+	
+	</p>
+    
+</div>    
+</div>  
+
+   </form>
+</div>
+{% endblock %}

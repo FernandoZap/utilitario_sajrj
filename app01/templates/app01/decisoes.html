@@ -1,0 +1,301 @@
+<!doctype html>
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>Controle Decisao</title>
+</head>
+
+<body>
+
+  <a href="{% url 'core:home'  %}"><img src="{% static 'imagens/seta_voltar.jpg' %}" alt="Voltar" height="72" width="72"></a>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-8">
+          <h3 class="mt-2">Utilitários Saj - Web - Relatório de Decisões</h3>
+          <hr class="mt-0 mb-4">
+
+<form enctype="multipart/form-data" action="." method="post">{%csrf_token%}
+
+<div class="form-row">
+  <div class="form-group col-md-6">
+  <label for="data_inicial" class="control-label col-md-2">Data Inicial:</label>
+  <input type="date" id="data_inicial" name="data_inicial" data-date-format='dd-mm-yyyy' />
+  </div>    
+
+<div class="form-group col-md-6">
+<label for="data_final" class="control-label col-md-2">Data final:</label>
+<input type="date" id="data_final" name="data_final" data-date-format='dd-mm-yyyy'  />
+</div>    
+</div>
+
+
+
+<div class="row">
+<div class="form-group">  
+  <div class="col">
+  
+    <div class="fileUpload btn btn-outline-secondary ">
+    <label for="upload" class="col-form-label">Planilha das tramitacoes</label>
+      <input type="file" class="upload" name="plan_tramitacoes" />
+    </div>
+  </div>
+  </div>
+</div>  
+
+
+
+
+<div class="form-group">
+    <div class="col">
+    <label for="id_estado" class="col-form-label">Estado (Selecione um ou mais Estado)</label>
+    <select name="estado"  id="id_estado" class="form-control" multiple required>
+      {% for id, name in form.estado.field.choices %}
+      <option value="{{ id }}"  >{{ name }}</option>
+      {% endfor %}
+    </select>   
+    </div>
+</div>    
+
+<div class="form-group">
+    <div class="col">
+    <label for="id_tipo_decisao" class="col-form-label">Tipo da Decisão</label>
+    <select name="tipo_decisao"  id="id_tipo_decisao" class="form-control"  required>
+    <option value="0" selected  ></option>
+      {% for t1 in tpdecisao %}
+      <option value="{{ t1.id_tipodecisao }}"  >{{ t1.descricao }}</option>
+      {% endfor %}
+    </select>   
+    </div>
+</div>    
+
+
+<div class="form-group">
+    <div class="col">
+    <label for="id_decisao" class="col-form-label">Decisão</label>
+    <select name="decisao"  id="id_decisao" class="form-control" required >
+    <option value="0"></option>
+    </select>   
+
+    </div>
+</div>    
+
+<div class="form-group">
+    <div class="col">
+    <label for="id_motivo" class="col-form-label">Motivo</label>
+    <select name="motivo"  id="id_motivo" class="form-control" required >
+    <option value="0" selected  ></option>
+    </select>   
+    </div>
+</div>    
+
+
+<div class="form-group">
+    <div class="col">
+    <label for="id_resultado" class="col-form-label">Resultado</label>
+    <select name="resultado"  id="id_resultado" class="form-control" >
+  <option value="0" selected  >Todos</option>
+      {% for t1 in tabela_de_resultados %}
+      <option value="{{ t1.id }}"  >{{ t1.descricao }}</option>
+      {% endfor %}  
+    </select>   
+    </div>
+</div>    
+
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <label for="id_situacaosaj" class="col-form-label">Situacao no Saj</label>
+    <select name="situacaosaj"  id="id_situacaosaj" class="form-control" >
+      {% for id, name in situacoes_saj %}
+      <option value="{{ id }}"  >{{ name }}</option>
+      {% endfor %}
+    </select>   
+    </div>
+
+  <div class="form-group col-md-6">
+    <label for="id_situacaocliente" class="col-form-label">Situacao no Cliente</label>
+    <select name="situacaocliente"  id="id_situacaocliente" class="form-control" >
+      {% for id, name in situacoes_cliente %}
+      <option value="{{ id }}"  >{{ name }}</option>
+      {% endfor %}
+    </select>   
+    </div>  
+  
+</div>    
+
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <label for="id_situacaosaj" class="col-form-label">Honorarios periciais</label>
+    <select name="hpericiais"  id="id_hpericiais" class="form-control" >
+      {% for id, name in situacao_hpericiais %}
+      <option value="{{ id }}"  >{{ name }}</option>
+      {% endfor %}
+    </select>   
+    </div>
+
+  <div class="form-group col-md-6">
+    <label for="id_situacaocliente" class="col-form-label">Sentença</label>
+    <select name="sentenca"  id="id_sentenca" class="form-control" >
+      {% for id, name in situacao_sentenca %}
+      <option value="{{ id }}"  >{{ name }}</option>
+      {% endfor %}
+    </select>   
+    </div>  
+  
+</div>    
+
+  
+    <p><span style="display:none"><input type="submit" id="submit" value="Entrar 2" ></span></p>
+    <p>
+  <a class="btn btn-primary" href="#"  onclick="fnSubmit();"  role="button">Executar</a>
+  
+  </p>
+  <div id="msgDiv" style="display:none">Aguarde ja estamos processando!!</div>
+  <input type="hidden" id="flag" value="0">
+
+
+</form>
+</div>
+</div>
+</div>
+<script>
+
+$(document).ready(function(){
+   var parametro1 = document.getElementById("id_tipo_decisao");
+   
+$(parametro1).change(function(){
+    
+    var param = document.getElementById("id_tipo_decisao");
+    var indice = param.options[param.selectedIndex].value;
+    $.ajax({
+      type: "GET",
+      url: "http://192.168.50.100:8080/jbaa/app01/decisao_ajax_01",
+      data: {
+        opcao: indice
+      },
+      success: function(data){
+      var parametro_decisao = document.getElementById("id_decisao");
+      var parametro_motivo = document.getElementById("id_motivo");
+      var key;
+      var valor;
+      for (i=0; i<data.length; i++){
+        //$('ul').append('<li>'+data[i]+'</li>');
+        if(i==0){
+            //var comboCidades = document.getElementById("cboCidades");
+            while (parametro_decisao.length) {
+              parametro_decisao.remove(0);
+            }
+            while (parametro_motivo.length){
+              parametro_motivo.remove(0)
+            }
+            $(parametro_decisao).append('<option value=0 selected>Todos</option>');
+            $(parametro_motivo).append('<option value=0 selected>Todos</option>');
+        }
+        //array = data[i].split(":");
+         $(parametro_decisao).append('<option value='+data[i].key+'> '+data[i].value+'</option>');
+      }
+    }
+    });
+  }); 
+});
+
+$(document).ready(function(){
+   var parametro2 = document.getElementById("id_decisao");
+  $(parametro2).change(function(){
+    var param1 = document.getElementById("id_tipo_decisao");
+    var param2 = document.getElementById("id_decisao");
+    var indice_tipodecisao = param1.options[param1.selectedIndex].value;
+    var indice_decisao = param2.options[param2.selectedIndex].value;
+    $.ajax({
+      type: "GET",
+      url: "http://192.168.50.100:8080/jbaa/app01/decisao_ajax_02",
+      data: {
+        opcao1: indice_tipodecisao,
+        opcao2: indice_decisao,
+      },
+      success: function(data){
+      var parametro_motivo = document.getElementById("id_motivo");
+      var key;
+      var valor;
+      for (i=0; i<data.length; i++){
+        //$('ul').append('<li>'+data[i]+'</li>');
+        if(i==0){
+            //var comboCidades = document.getElementById("cboCidades");
+
+            while (parametro_motivo.length){
+              parametro_motivo.remove(0)
+            }
+            $(parametro_motivo).append('<option value=0 selected>Todos</option>');
+        }
+        //array = data[i].split(":");
+         $(parametro_motivo).append('<option value='+data[i].key+'> '+data[i].value+'</option>');
+      }
+    }
+    });
+  }); 
+});
+
+
+function fnSubmit(){
+
+if(document.getElementById("flag").value=="1"){
+   return false;
+}else{
+document.getElementById("flag").value="1";
+if (document.getElementById("data_inicial").value==""  || document.getElementById("data_final").value==""){
+  alert("Informe a data inicial e a data final!");
+  if(document.getElementById("data_inicial").value==""){
+  document.getElementById("data_inicial").focus();
+  }else{
+  document.getElementById("data_final").focus();
+  }
+  document.getElementById("flag").value="0";
+  return false;
+}
+/*
+if (document.getElementById("id_tipo_decisao").value==0){
+  alert("Selecione um tipo de decisao");
+  document.getElementById("id_tipo_decisao").focus();
+  document.getElementById("flag").value="0";
+  return false;
+}
+*/
+
+if (document.getElementById("id_tipo_decisao").value==0){
+  document.getElementById("msgDiv").style.display = "block";
+  document.getElementById("submit").click();
+  return true;
+}
+
+if (document.getElementById("id_tipo_decisao").value>0 && document.getElementById("id_decisao").value==0 ){
+  document.getElementById("msgDiv").style.display = "block";
+  document.getElementById("submit").click();
+  return true;
+}
+
+
+if (document.getElementById("id_tipo_decisao").value>0 && document.getElementById("id_decisao").value>0 && document.getElementById("id_motivo").value==0){
+  document.getElementById("msgDiv").style.display = "block";
+  document.getElementById("submit").click();
+  return true;
+}
+
+
+
+if (document.getElementById("id_motivo").value==0){
+  alert("Selecione um motivo");
+  document.getElementById("id_motivo").focus();
+  document.getElementById("flag").value="0";
+  return false;
+}
+  document.getElementById("msgDiv").style.display = "block";
+  document.getElementById("submit").click();
+}
+
+}
+
+</script>
+
+</body>
+</html>

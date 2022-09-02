@@ -1,0 +1,97 @@
+<!doctype html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <meta name="description" content="Simple MOOC : Uma simples plataforma de ensino a distancia" />
+    <title>Utilitários</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css'  %}" />
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/menu.css' %}" />
+    <style>
+.tab_layout {font-size: 12px;text-align: center;}
+</style>
+
+</head>
+<body>
+<div class="header">
+
+<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand">Utilitários Web</a>
+    </div>
+  </nav>
+
+<!-- Menu -->
+
+<ul class="menuH decor1">
+{% if user.is_authenticated %}
+        <li><a href="{% url 'core:home'  %}">Inicio</a></li>
+        <li style="margin-left:70px;"><a class="arrow">1 Integração RE</a>
+            <ul>
+                                <li><a href="#">1.1 Andamentos (Pesquisa)</a></li>
+                                <li><a href="#">1.2 Consultar Status da Tramitação</a></li>
+                                <li><a href="#">1.2 Histório Log Robô RE</a></li>
+                                <li><a href="#">1.3 Iniciar Conferência HonConveniados</a></li>
+                                <li><a href="#">1.4 Fechar Conferência HonConveniados</a></li>
+
+
+            </ul>
+        </li>
+        <li><a href="#" class="arrow">2 Cadastro em massa</a>
+            <ul>
+                        <li><a href="{% url 'app01:cadastro_tramitacoes' %}">2.1 Tramitações</a></li>
+                        <li><a href="{% url 'app01:incluirHp' %}">2.2 Honorarios Periciais</a></li>
+                        <li><a href="#">2.3 Alterar Status de Custas</a></li>
+                        <li>
+                            <a href="{% url 'app01:inserir-hon-recebidos' %}" >2.4 Inserir honorarios recebidos</a>
+                        </li>
+
+
+            </ul>
+        </li>
+
+        <li><a href="#" class="arrow">3 Diversos</a>
+            <ul>
+                        <li><a href="{% url 'app01:dadosGeraisDoProcesso' %}">3.1 Dados Gerais do Processo</a></li>
+                        <li><a href="#">3.2 Amarracao</a></li>
+                        <li><a href="#">3.3 Relatório de Decisões</a></li>
+                        <li><a href="{% url 'app01:baseAtiva' %}">3.4 Base Ativa</a></li>
+                        <li><a href="{% url 'app01:honorarios' %}">3.5 Honorarios</a></li>
+                        </ul>
+        </li>
+
+
+        <li><a href="#" class="arrow">4 Layout's</a>
+            <ul>
+                  <li><a href="{% static 'imagens/layout_incluir_tramitacao2.gif' %}">4.1 Incluir tramitação</a></li>
+                  <li><a href="{% static 'imagens/layout_status_tramitacao.gif' %}">4.2 Alterar Status tramitação</a></li>
+                  <li><a href="{% static 'imagens/layout_reagendamento.gif' %}">4.3 Reagendar tramitação</a></li>
+                 <li><a href="#">4.4 Excluir tramitação</a></li>
+                  <li><a href="#">4.4 Honorarios Periciais</a></li>
+            </ul>
+        </li>
+
+        
+
+         <li><a href="{% url 'accounts:logout'  %}">6. Sair</a>
+         {% else %}
+         <li><a href="{% url 'accounts:login'  %}">Login</a>
+{% endif %}
+    </ul>
+
+  
+  </div>
+<div class="content">
+    {%  block content %} {% endblock %}
+    <div class="footer">
+        Novo Utilitários Saj.
+     </div>
+  </div>
+  <script src="http://yui.yahooapis.com/3.12.0/build/yui/yui-min.js"></script>
+</body>
+</html>
