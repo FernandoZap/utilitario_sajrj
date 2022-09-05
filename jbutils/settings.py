@@ -20,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*$1e68^s8i$5@g%8#_a)p^q0oju)dph0i_4!39alngen37lea)'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['15.229.88.125','jbutilitarios.com','localhost']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -84,10 +84,10 @@ WSGI_APPLICATION = 'jbutils.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db_utilitario',
-        'USER': 'user_utilitario',
-        'PASSWORD': 'kra$$0MU#$%BB?',
+        'ENGINE': '',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': ''
     }
@@ -142,6 +142,9 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_URL = 'accounts:logout'
+
+SESSION_COOKIE_AGE=900
+SESSION_SAVE_EVERY_REQUEST=True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

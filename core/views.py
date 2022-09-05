@@ -8,5 +8,5 @@ def home(request):
 		usuario = request.session['username']
 	else:
                 #current_user=request.user.iduser
-		usuario = ''
+		usuario = request.user.username
 	return render (request, 'core/home.html', { 'usuario': usuario })

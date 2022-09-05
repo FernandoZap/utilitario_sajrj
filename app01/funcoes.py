@@ -76,6 +76,7 @@ def ler_plan_pastas(planilha, lote, id_operador, programa):
 
 
     params = (id_operador,lote,'xxxxx')
+    db_connection.autocommit=True
     db_cursor.execute(sqlExecSP, params)
 
     db_cursor.close()
